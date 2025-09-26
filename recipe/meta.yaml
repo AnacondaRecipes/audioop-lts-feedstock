@@ -16,8 +16,7 @@ build:
 
 requirements:
   build:
-    - ${{ stdlib('c') }}
-    - ${{ compiler('c') }}
+    - {{ compiler('c') }}
   host:
     - pip
     - python
@@ -30,13 +29,14 @@ test:
   source_files:
     - tests
   imports:
-    - audioop_lts
+    - audioop
   commands:
     - pip check
     - python -c "import audioop; assert list(audioop.reverse(bytes([1,2,4,8]), 2)) == [4, 8, 1, 2]"
     - pytest -v tests
   requires:
     - pip
+    - pytest
 
 about:
   home: https://github.com/AbstractUmbra/audioop
