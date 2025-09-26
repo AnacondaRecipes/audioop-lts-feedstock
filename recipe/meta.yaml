@@ -1,0 +1,55 @@
+{% set name = "audioop-lts" %}
+{% set version = "0.2.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
+  sha256: 64d0c62d88e67b98a1a5e71987b7aa7b5bcffc7dcee65b635823dbdd0a8dbbd0
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<313]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+  host:
+    - pip
+    - python
+    - wheel
+    - setuptools
+  run:
+    - python
+
+test:
+  source_files:
+    - tests
+  imports:
+    - audioop
+  commands:
+    - pip check
+    - python -c "import audioop; assert list(audioop.reverse(bytes([1,2,4,8]), 2)) == [4, 8, 1, 2]"
+    - pytest -v tests
+  requires:
+    - pip
+    - pytest
+
+about:
+  home: https://github.com/AbstractUmbra/audioop
+  summary: LTS Port of Python audioop
+  license: EPL-2.0
+  license_family: OTHER
+  license_file: LICENSE
+  description: An LTS port of the Python builtin module audioop which was deprecated since version 3.11 and removed in 3.13.
+  doc_url: https://github.com/AbstractUmbra/audioop/blob/main/README.md
+  dev_url: https://github.com/AbstractUmbra/audioop
+
+extra:
+  recipe-maintainers:
+    - bmcfee
+    - IzerOnadimQC
+    - xhochy
